@@ -42,15 +42,16 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
             {
                 itemView.itemDelay.text = item.departure.delay.toString() + "min"
             }
-
-
             if(item.flightStatus == "scheduled"){
                 itemView.itemStatus.setImageResource(R.drawable.status_yellow)
             }else if (item.flightStatus == "cancelled"){
                 itemView.itemStatus.setImageResource(R.drawable.status_red)
-            }else
-            {
+            }else if(item.flightStatus == "active") {
                 itemView.itemStatus.setImageResource(R.drawable.status_green)
+            }else if(item.flightStatus=="landed"){
+                itemView.itemStatus.setImageResource(R.drawable.status_blue)
+            }else{
+                itemView.itemStatus.setImageResource(R.drawable.status_black)
             }
             //Alt kısımda kurduğum yapıda bir hata var ama anlamadım.
             /*when (item.flightStatus) {
