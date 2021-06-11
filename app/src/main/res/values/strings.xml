@@ -10,6 +10,7 @@
 
     <!-- Home Activity-->
     <string name="home_title">Flight</string>
+    <string name="home_log_out">Çıkış Yap</string>
 
     <!-- Item RecyclerView -->
     <string name="item_airport">Havayolu:</string>

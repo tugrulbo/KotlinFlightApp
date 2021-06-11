@@ -35,5 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeBtnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/home_log_out"
+        android:backgroundTint="@color/home_title_bg_end"
+        />
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,5 +1,6 @@
 package com.tugrulbo.kotlinflightapp.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,16 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
         setContentView(R.layout.activity_home)
         progressDialog = ProgressDialog(this)
         getAllFlightData()
+        onClickEvents()
+    }
+
+    private fun onClickEvents(){
+        homeBtnLogout.setOnClickListener {
+            clearEmailAndPass()
+            val intent = Intent(this@HomeActivity,LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun getAllFlightData(){
@@ -84,6 +95,14 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
        var intent = Intent(this,DetailActivity::class.java)
         intent.putExtra("position",position)
         startActivity(intent)
+    }
+
+    private fun clearEmailAndPass(){
+        var sharedPref = getSharedPreferences("LoginInfo", Context.MODE_PRIVATE)
+        var editor = sharedPref.edit()
+        editor.remove("email").commit()
+        editor.remove("password").commit()
+        editor.remove("isRemember").commit()
     }
 
 

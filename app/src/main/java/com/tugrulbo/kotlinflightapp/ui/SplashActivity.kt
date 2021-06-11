@@ -17,6 +17,7 @@ class SplashActivity : AppCompatActivity() {
            Timer().schedule(object : TimerTask() {
                override fun run() {
                    startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
+                   finish()
                }
            }, 3000)
        }else //Eğer checkRemember "false" dönerse loginactivity'e geç
@@ -24,6 +25,7 @@ class SplashActivity : AppCompatActivity() {
            Timer().schedule(object : TimerTask() {
                override fun run() {
                    startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                   finish()
                }
            }, 3000)
        }
