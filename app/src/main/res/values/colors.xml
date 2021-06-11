@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="app_bg">#F9F9F9</color>
+
+    <!--Splash Color -->
+    <color name="splash_background">#1B56AE</color>
+
+    <!-- Login Color -->
+    <color name="text_border">#6200EE</color>
+    <color name="light_dark">#263238</color>
+    <color name="button_color">#1A7FE1</color>
+
+    <!-- Home Color -->
+    <color name="home_title_bg_start">#1A7FE1</color>
+    <color name="home_title_bg_end">#215EC1</color>
+
+    <!-- Item RecyclerView-->
+    <color name="title_color">#2B3C6A</color>
+    <color name="bottom_section">#F1F2FB</color>
+    <color name="status_green">#70FF00</color>
+    <color name="status_red">#FF0000</color>
+    <color name="status_yellow">#FFE600</color>
+
+    <!-- Detail -->
+    <color name="cardview_bg">#1C57B0</color>
+    <color name="second_title_bg">#B3FFFFFF</color>
+    <color name="bottom_title_bg">#1C57B0</color>
+
+
+
+
+</resources>

@@ -1,0 +1,35 @@
+<resources>
+
+    <string name="app_name">Flight App</string>
+
+    <!-- Login Activity-->
+    <string name="login_email_hint">E-Posta</string>
+    <string name="login_password_hint">Şifre</string>
+    <string name="login_remember_me">Beni Hatırla</string>
+    <string name="login_sign_in">Giriş Yap</string>
+
+    <!-- Home Activity-->
+    <string name="home_title">Flight</string>
+
+    <!-- Item RecyclerView -->
+    <string name="item_airport">Havayolu:</string>
+    <string name="item_icao">Kalkış:</string>
+    <string name="item_estimated">Varış:</string>
+
+
+    <!-- Detail Activity-->
+    <string name="detail_title">PX100 Flight Details</string>
+    <string name="detail_icao_short">ESD</string>
+    <string name="detail_estimated_short">SAW</string>
+    <string name="detail_icao">Esenboğa</string>
+    <string name="detail_estimated">Sabiha Gökçen</string>
+    <string name="detail_icao_date">Thu, Aug 17 9:40 AM</string>
+    <string name="detail_estimated_date">Thu, Aug 17 11:50 AM</string>
+    <string name="flight_name">Flight: </string>
+    <string name="flight_gate">Gate: </string>
+    <string name="flight_terminal">Terminal: </string>
+    <string name="flight_delay">Delay: </string>
+
+
+
+</resources>
