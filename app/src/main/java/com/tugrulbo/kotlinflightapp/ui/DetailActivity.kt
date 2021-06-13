@@ -14,6 +14,7 @@ import com.tugrulbo.kotlinflightapp.utils.DateFormatter
 import com.tugrulbo.kotlinflightapp.view.ProgressDialog
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_home.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailActivity : AppCompatActivity() {
@@ -49,13 +50,13 @@ class DetailActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun holder(flightData: Data?){
-        var departureDate = flightData?.departure?.estimated
-        var arrivalDate = flightData?.arrival?.estimated
-        var flightDate:DateFormatter?=null
-        Log.e(TAG, "holder: ${departureDate} + ${arrivalDate}", )
-        var departTime = flightDate?.getDate(departureDate.toString())
-        var arrivalTime = flightDate?.getDate(arrivalDate.toString())
-
+        var departureDate:String = flightData?.departure?.estimated.toString()
+        var arrivalDate = flightData?.arrival?.estimated.toString()
+        val flightDate:DateFormatter?=null
+        var parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val formatter = SimpleDateFormat("E, MMM yy HH:mm a", Locale.ENGLISH)
+        val departTime = formatter.format(parser.parse(departureDate))
+        val arrivalTime = formatter.format(parser.parse(departureDate))
 
         //Çok fazla data olduğu için bazı datalar null geliyordu. Bu da uygulamayı patlatıyordu.
         flightData?.flight?.iata.let {

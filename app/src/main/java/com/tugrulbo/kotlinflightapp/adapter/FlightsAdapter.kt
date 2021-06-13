@@ -12,6 +12,7 @@ import com.tugrulbo.kotlinflightapp.model.Data
 import com.tugrulbo.kotlinflightapp.utils.Constant
 import com.tugrulbo.kotlinflightapp.utils.DateFormatter
 import kotlinx.android.synthetic.main.item_home_recyclerview.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickListener: OnListClickListener):RecyclerView.Adapter<FlightsAdapter.RowHolder>() {
@@ -25,8 +26,12 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
 
             val item = flightsList[adapterPosition]
 
-            var departureTime = flightDate?.getDate(item.departure?.scheduled.toString())
-            var arrivalTime = flightDate?.getDate(item.arrival?.scheduled.toString())
+            var departureDate = item.departure?.scheduled.toString()
+            var arrivalDate = item.arrival?.scheduled.toString()
+            var parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+            val departTime = formatter.format(parser.parse(departureDate))
+            val arrivalTime = formatter.format(parser.parse(arrivalDate))
 
             item.airline?.name.let {
                 itemView.itemTextAirport.text = Constant.nullValue
@@ -37,16 +42,16 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
             item.departure?.icao.let {
                 itemView.itemTextIcao.text = Constant.nullValue
             }.run{
-                itemView.itemTextIcao.text = "${item?.departure?.icao.toString()} - ${departureTime?.subSequence(11,16)} "
+                itemView.itemTextIcao.text = "${item?.departure?.icao.toString()} - $departTime "
             }
 
             item.arrival?.icao.let {
                 itemView.itemTextEstimated.text = Constant.nullValue
             }.run {
-                itemView.itemTextEstimated.text = "${item?.arrival?.icao.toString()} - ${arrivalTime?.subSequence(11,16)}"
+                itemView.itemTextEstimated.text = "${item?.arrival?.icao.toString()} - $arrivalTime"
             }
 
-            item.departure?.delay.let {
+            item.arrival?.delay.let {
                 itemView.itemDelay.text = Constant.nullValue
             }.run {
                 itemView.itemDelay.text = item.departure?.delay.toString() + "min"

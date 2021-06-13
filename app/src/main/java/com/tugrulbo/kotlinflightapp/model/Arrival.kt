@@ -11,7 +11,7 @@ data class Arrival(
     @SerializedName("airport")
     var airport: String?,
     @SerializedName("delay")
-    var delay: Int?,
+    var delay: Float?,
     @SerializedName("estimated")
     var estimated: String?,
     @SerializedName("gate")
