@@ -1,15 +1,17 @@
 package com.tugrulbo.kotlinflightapp.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+
+@Parcelize
 data class Flight(
-    @SerializedName("codeshared")
-    var codeshared: Any,
     @SerializedName("iata")
-    var iata: String,
+    var iata: String?,
     @SerializedName("icao")
-    var icao: String,
+    var icao: String?,
     @SerializedName("number")
-    var number: String
-)
+    var number: String?
+):Parcelable

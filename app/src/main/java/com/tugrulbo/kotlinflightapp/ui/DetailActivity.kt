@@ -1,35 +1,24 @@
 package com.tugrulbo.kotlinflightapp.ui
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tugrulbo.kotlinflightapp.R
-import com.tugrulbo.kotlinflightapp.adapter.FlightsAdapter
 import com.tugrulbo.kotlinflightapp.model.Data
-import com.tugrulbo.kotlinflightapp.model.FlightData
-import com.tugrulbo.kotlinflightapp.network.NetworkHelper
 import com.tugrulbo.kotlinflightapp.utils.Constant
+import com.tugrulbo.kotlinflightapp.utils.DateFormatter
 import com.tugrulbo.kotlinflightapp.view.ProgressDialog
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_home.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DetailActivity : AppCompatActivity() {
 
-    val flightDataList = ArrayList<Data>()
     private var progressDialog: ProgressDialog? = null
-    private var networkHelper = NetworkHelper()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,114 +39,83 @@ class DetailActivity : AppCompatActivity() {
 
     private fun loadData(){
         showProgress(true)
-        networkHelper.flightsData?.getAllFlights(Constant.apiKey)?.enqueue(object :
-            Callback<FlightData> {
-            override fun onResponse(call: Call<FlightData>, response: Response<FlightData>) {
-                showProgress(false)
-
-                response.body()?.data.let {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        it?.forEach{
-                            flightDataList.add(it)
-                        }
-                        val id = intent.getIntExtra("position",0)
-                        holder(flightDataList,id)
-
-                    } else {
-                        TODO("VERSION.SDK_INT < N")
-                    }
-
-                }
-            }
-
-            override fun onFailure(call: Call<FlightData>, t: Throwable) {
-                showProgress(false)
-                Toast.makeText(
-                    this@DetailActivity,
-                    "Şuan görüntülenememektedir.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-
-        })
-
+        val flightData:Data? = intent.getParcelableExtra("flightData")
+        Log.e(TAG, "loadData: ${flightData}", )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder(flightData)
+            showProgress(false)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun holder(flightDataList:ArrayList<Data>, id:Int){
-        var f = DateTimeFormatter.ISO_DATE_TIME
-        var departureDate = flightDataList[id].departure.estimated.toString()
-        var arrivalDate = flightDataList[id].arrival.estimated.toString()
-        var departureTime = ZonedDateTime.parse(departureDate,f)
-        var arrivalTime = ZonedDateTime.parse(arrivalDate,f)
-        var departTime = "${departureTime.dayOfMonth}, ${departureTime.month} ${departureTime.year} ${departureTime.hour}:${departureTime.minute}"
-        var arrTime = "${arrivalTime.dayOfMonth}, ${arrivalTime.month} ${arrivalTime.year} ${arrivalTime.hour}:${arrivalTime.minute}"
+    private fun holder(flightData: Data?){
+        var departureDate = flightData?.departure?.estimated
+        var arrivalDate = flightData?.arrival?.estimated
+        var flightDate:DateFormatter?=null
+        Log.e(TAG, "holder: ${departureDate} + ${arrivalDate}", )
+        var departTime = flightDate?.getDate(departureDate.toString())
+        var arrivalTime = flightDate?.getDate(arrivalDate.toString())
+
 
         //Çok fazla data olduğu için bazı datalar null geliyordu. Bu da uygulamayı patlatıyordu.
-        if(flightDataList[id].flight.iata !=null){
-            detailTxtAppName.text = flightDataList[id].flight.iata.toString() + " Flight Details"
-        }else{
+        flightData?.flight?.iata.let {
             detailTxtAppName.text ="- Flight Details"
+        }.run {
+            detailTxtAppName.text = flightData?.flight?.iata.toString() + " Flight Details"
         }
 
-        if(flightDataList[id].departure.icao !=null){
-            detailDepartureShort.text = flightDataList[id].departure.icao.toString()
-        }else{
-            detailDepartureShort.text="-"
+        flightData?.departure?.icao.let {
+            detailDepartureShort.text= Constant.nullValue
+        }.run {
+            detailDepartureShort.text = flightData?.departure?.icao.toString()
         }
 
-        if(flightDataList[id].departure.airport !=null){
-            detailDepature.text = flightDataList[id].departure.airport.toString()
-        }else
-        {
-            detailDepature.text="-"
+        flightData?.departure?.airport.let{
+            detailDepature.text= Constant.nullValue
+        }.run {
+            detailDepature.text = flightData?.departure?.airport.toString()
         }
 
-        if(departTime !=null){
-            detailDepatureDate.text = departTime
-        }else{
-            detailDepatureDate.text="-"
+        detailDepatureDate.text = departTime.toString()
+
+
+        flightData?.arrival?.icao.let {
+            detailArrivalShort.text = Constant.nullValue
+        }.run {
+            detailArrivalShort.text = flightData?.arrival?.icao.toString()
         }
 
-        if( flightDataList[id].arrival.icao !=null){
-            detailArrivalShort.text = flightDataList[id].arrival.icao.toString()
-        }else{
-            detailArrivalShort.text = "-"
+        flightData?.arrival?.airport.let {
+            detailArrival.text=Constant.nullValue
+        }.run {
+            detailArrival.text = flightData?.arrival?.airport.toString()
         }
 
-        if(flightDataList[id].arrival.airport !=null){
-            detailArrival.text = flightDataList[id].arrival.airport.toString()
-        }else{
-            detailArrival.text="-"
+        detailArrivalDate.text = arrivalTime.toString()
+
+
+        flightData?.flight?.iata.let {
+            detailFlight.text = Constant.nullValue
+        }.run {
+            detailFlight.text = flightData?.flight?.iata.toString()
         }
 
-        if(arrTime !=null){
-            detailArrivalDate.text = arrTime
-        }else{
-            detailArrivalDate.text = "-"
+        flightData?.departure?.gate.let {
+            detailGate.text=Constant.nullValue
+        }.run {
+            detailGate.text = flightData?.departure?.gate.toString()
         }
 
-        if(flightDataList[id].flight.iata !=null){
-            detailFlight.text = flightDataList[id].flight.iata.toString()
-        }else
-        {
-            detailFlight.text = "-"
+        flightData?.departure?.terminal.let {
+            detailTerminal.text=Constant.nullValue
+        }.run {
+            detailTerminal.text = flightData?.departure?.terminal.toString()
         }
-        if(flightDataList[id].departure.gate != null){
-            detailGate.text = flightDataList[id].departure.gate.toString()
-        }else{
-            detailGate.text = "-"
-        }
-        if(flightDataList[id].departure.terminal != null){
-            detailTerminal.text = flightDataList[id].departure.terminal.toString()
-        }else{
-            detailTerminal.text = "-"
-        }
-        if(flightDataList[id].departure.delay != null){
-            detailDelay.text = flightDataList[id].departure.delay.toString()
-        }else{
-            detailDelay.text = "-"
+
+        flightData?.departure?.delay.let {
+            detailDelay.text = Constant.nullValue
+        }.run {
+            detailDelay.text = flightData?.departure?.delay.toString()
         }
 
     }

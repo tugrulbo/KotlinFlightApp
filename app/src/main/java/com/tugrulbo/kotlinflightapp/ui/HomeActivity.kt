@@ -1,10 +1,12 @@
 package com.tugrulbo.kotlinflightapp.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +30,7 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
     private var progressDialog: ProgressDialog? = null
     private var networkHelper = NetworkHelper()
     private var flightDataAdapter:FlightsAdapter? = null
+    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this@HomeActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,7 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
         progressDialog = ProgressDialog(this)
         getAllFlightData()
         onClickEvents()
+
     }
 
     private fun onClickEvents(){
@@ -53,36 +57,32 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
                 showProgress(false)
 
                 response.body()?.data.let {
-                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                       it?.forEach{
-                           flightDataList.add(it)
-                           flightDataList.let {
-                               flightDataAdapter = FlightsAdapter(it!!,this@HomeActivity)
-                               val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this@HomeActivity)
-                               homeRecyclerView?.layoutManager=layoutManager
-                               homeRecyclerView.adapter=flightDataAdapter
+                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                           it?.forEach{
+                               flightDataList.add(it)
                            }
+                       } else {
+                           TODO("VERSION.SDK_INT < N")
                        }
-
-                   } else {
-                       TODO("VERSION.SDK_INT < N")
-                   }
-
                 }
-            }
 
+                //sorulacak kısım
+                flightDataAdapter = FlightsAdapter(flightDataList,this@HomeActivity)
+                homeRecyclerView?.layoutManager=layoutManager
+                homeRecyclerView.adapter=flightDataAdapter
+                flightDataAdapter!!.notifyDataSetChanged()
+
+            }
             override fun onFailure(call: Call<FlightData>, t: Throwable) {
                 showProgress(false)
+
+                //Error mesajı artık "Constant" dosyası altından çekiliyor
                 Toast.makeText(
-                    this@HomeActivity,
-                    "Şuan görüntülenememektedir.",
+                    this@HomeActivity, Constant.homeNotLoading,
                     Toast.LENGTH_LONG
                 ).show()
             }
-
-
         })
-
     }
 
     private fun showProgress(show: Boolean) {
@@ -93,16 +93,17 @@ class HomeActivity : AppCompatActivity(), FlightsAdapter.OnListClickListener {
 
     override fun onClick(flightsList: ArrayList<Data>, position: Int) {
        var intent = Intent(this,DetailActivity::class.java)
-        intent.putExtra("position",position)
+        intent.putExtra("flightData",flightDataList[position])
+        Log.e(TAG, "onClick: ${flightDataList[position]}", )
         startActivity(intent)
     }
 
     private fun clearEmailAndPass(){
-        var sharedPref = getSharedPreferences("LoginInfo", Context.MODE_PRIVATE)
+        var sharedPref = getSharedPreferences(Constant.sharedPrefName, Context.MODE_PRIVATE)
         var editor = sharedPref.edit()
-        editor.remove("email").commit()
-        editor.remove("password").commit()
-        editor.remove("isRemember").commit()
+        editor.remove(Constant.sharedPrefEmail).commit()
+        editor.remove(Constant.sharedPrefPass).commit()
+        editor.remove(Constant.sharedPrefBoolean).commit()
     }
 
 

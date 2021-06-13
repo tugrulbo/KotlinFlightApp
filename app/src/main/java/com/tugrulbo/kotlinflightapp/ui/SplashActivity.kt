@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tugrulbo.kotlinflightapp.R
+import com.tugrulbo.kotlinflightapp.utils.Constant
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {
@@ -32,10 +33,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkRemember() : Boolean{
-        val sharedPreferences = getSharedPreferences("LoginInfo", Context.MODE_PRIVATE)
-        val email = sharedPreferences.getString("email","")
-        val password = sharedPreferences.getString("password","")
-        val isRemember = sharedPreferences.getBoolean("isRemember",false)
+
+        //SharedPreferences kullanılan kısımlarda yapılan düzenlemeler
+        val sharedPreferences = getSharedPreferences(Constant.sharedPrefName, Context.MODE_PRIVATE)
+        val email = sharedPreferences.getString(Constant.sharedPrefEmail,"")
+        val password = sharedPreferences.getString(Constant.sharedPrefPass,"")
 
         return email?.isNotEmpty() == true && password?.isNotEmpty() == true
 

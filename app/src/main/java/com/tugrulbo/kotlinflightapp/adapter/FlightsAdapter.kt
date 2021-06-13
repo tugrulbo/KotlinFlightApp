@@ -5,63 +5,62 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.tugrulbo.kotlinflightapp.R
 import com.tugrulbo.kotlinflightapp.model.Data
-import com.tugrulbo.kotlinflightapp.model.FlightData
-import com.tugrulbo.kotlinflightapp.ui.HomeActivity
+import com.tugrulbo.kotlinflightapp.utils.Constant
+import com.tugrulbo.kotlinflightapp.utils.DateFormatter
 import kotlinx.android.synthetic.main.item_home_recyclerview.view.*
-import java.text.DateFormat
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickListener: OnListClickListener):RecyclerView.Adapter<FlightsAdapter.RowHolder>() {
     private lateinit var context : Context
+    val flightDate :DateFormatter?=null
+
 
     inner class RowHolder(itemView:View) :RecyclerView.ViewHolder(itemView) {
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(){
 
             val item = flightsList[adapterPosition]
-            var f = DateTimeFormatter.ISO_DATE_TIME
-            var departureDate = item.departure.estimated.toString()
-            var arrivalDate = item.arrival.estimated.toString()
-            var departureTime = ZonedDateTime.parse(departureDate,f)
-            var arrivalTime = ZonedDateTime.parse(arrivalDate,f)
-            var departTime = "${departureTime.hour}:${departureTime.minute}"
-            var arrTime = "${arrivalTime.hour}:${arrivalTime.minute}"
-            itemView.itemTextAirport.text = item.airline.name.toString()
-            itemView.itemTextIcao.text = item.departure.icao.toString()+  " - " +departTime
-            itemView.itemTextEstimated.text = item.arrival.icao.toString()+  " - " + arrTime
-            if(item.departure.delay == null){
-                itemView.itemDelay.text = "Bilinmiyor"
-            }else
-            {
-                itemView.itemDelay.text = item.departure.delay.toString() + "min"
+
+            var departureTime = flightDate?.getDate(item.departure?.scheduled.toString())
+            var arrivalTime = flightDate?.getDate(item.arrival?.scheduled.toString())
+
+            item.airline?.name.let {
+                itemView.itemTextAirport.text = Constant.nullValue
+            }.run {
+                itemView.itemTextAirport.text = item?.airline?.name
             }
-            if(item.flightStatus == "scheduled"){
-                itemView.itemStatus.setImageResource(R.drawable.status_yellow)
-            }else if (item.flightStatus == "cancelled"){
-                itemView.itemStatus.setImageResource(R.drawable.status_red)
-            }else if(item.flightStatus == "active") {
-                itemView.itemStatus.setImageResource(R.drawable.status_green)
-            }else if(item.flightStatus=="landed"){
-                itemView.itemStatus.setImageResource(R.drawable.status_blue)
-            }else{
-                itemView.itemStatus.setImageResource(R.drawable.status_black)
+
+            item.departure?.icao.let {
+                itemView.itemTextIcao.text = Constant.nullValue
+            }.run{
+                itemView.itemTextIcao.text = "${item?.departure?.icao.toString()} - ${departureTime?.subSequence(11,16)} "
             }
-            //Alt kısımda kurduğum yapıda bir hata var ama anlamadım.
-            /*when (item.flightStatus) {
-                "scheduled" -> itemView.itemStatus.setImageResource(R.drawable.status_yellow)
-                "cancelled" -> itemView.itemStatus.setImageResource(R.drawable.status_red)
-                "active" ->itemView.itemStatus.setImageResource(R.drawable.status_green)
+
+            item.arrival?.icao.let {
+                itemView.itemTextEstimated.text = Constant.nullValue
+            }.run {
+                itemView.itemTextEstimated.text = "${item?.arrival?.icao.toString()} - ${arrivalTime?.subSequence(11,16)}"
+            }
+
+            item.departure?.delay.let {
+                itemView.itemDelay.text = Constant.nullValue
+            }.run {
+                itemView.itemDelay.text = item.departure?.delay.toString() + "min"
+            }
+
+            when(item.flightStatus){
+                "scheduled" ->itemView.itemStatus.setImageResource(R.drawable.status_yellow)
+                "cancelled" ->itemView.itemStatus.setImageResource(R.drawable.status_red)
+                "active" -> itemView.itemStatus.setImageResource(R.drawable.status_green)
+                "landed" -> itemView.itemStatus.setImageResource(R.drawable.status_blue)
                 else -> {
-                    itemView.itemStatus.setImageResource(R.drawable.status_green)
+                    itemView.itemStatus.setImageResource(R.drawable.status_black)
                 }
-            }*/
+            }
 
             itemView.setOnClickListener {
                 onListClickListener.onClick(flightsList,adapterPosition)
@@ -69,8 +68,6 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
         }
 
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowHolder {
         context = parent.context
@@ -90,4 +87,5 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
     interface OnListClickListener {
         fun onClick(flightsList: ArrayList<Data>,position: Int)
     }
+
 }

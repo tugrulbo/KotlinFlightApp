@@ -5,20 +5,18 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class Data(
     @SerializedName("airline")
-    var airline: Airline,
+    var airline: Airline?,
     @SerializedName("arrival")
-    var arrival: Arrival,
+    var arrival: Arrival?,
     @SerializedName("departure")
-    var departure: Departure,
+    var departure: Departure?,
     @SerializedName("flight")
-    var flight: Flight,
+    var flight: Flight?,
     @SerializedName("flight_date")
-    var flightDate: String,
+    var flightDate: String?,
     @SerializedName("flight_status")
-    var flightStatus: String,
-    @SerializedName("live")
-    var live: Any
-)
+    var flightStatus: String?,
+):Parcelable

@@ -1,31 +1,26 @@
 package com.tugrulbo.kotlinflightapp.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
+@Parcelize
 data class Departure(
-    @SerializedName("actual")
-    var `actual`: Any,
-    @SerializedName("actual_runway")
-    var actualRunway: Any,
-    @SerializedName("airport")
-    var airport: String,
+    var airport: String?,
     @SerializedName("delay")
-    var delay: Int,
+    var delay: Int?,
     @SerializedName("estimated")
-    var estimated: String,
-    @SerializedName("estimated_runway")
-    var estimatedRunway: Any,
+    var estimated: String?,
     @SerializedName("gate")
-    var gate: Any,
+    var gate: String?,
     @SerializedName("iata")
-    var iata: String,
+    var iata: String?,
     @SerializedName("icao")
-    var icao: String,
+    var icao: String?,
     @SerializedName("scheduled")
-    var scheduled: String,
+    var scheduled: String?,
     @SerializedName("terminal")
-    var terminal: String,
-    @SerializedName("timezone")
-    var timezone: String
-)
+    var terminal: String?
+):Parcelable
