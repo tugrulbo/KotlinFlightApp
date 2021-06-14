@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tugrulbo.kotlinflightapp.R
 import com.tugrulbo.kotlinflightapp.model.Data
 import com.tugrulbo.kotlinflightapp.utils.Constant
-import com.tugrulbo.kotlinflightapp.utils.DateFormatter
+import com.tugrulbo.kotlinflightapp.utils.FlightDateFormatter
 import kotlinx.android.synthetic.main.item_home_recyclerview.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickListener: OnListClickListener):RecyclerView.Adapter<FlightsAdapter.RowHolder>() {
     private lateinit var context : Context
-    val flightDate :DateFormatter?=null
+    val flightDate :FlightDateFormatter?=null
 
 
     inner class RowHolder(itemView:View) :RecyclerView.ViewHolder(itemView) {
@@ -33,28 +33,28 @@ class FlightsAdapter(private val flightsList: ArrayList<Data>, var onListClickLi
             val departTime = formatter.format(parser.parse(departureDate))
             val arrivalTime = formatter.format(parser.parse(arrivalDate))
 
-            item.airline?.name.let {
-                itemView.itemTextAirport.text = Constant.nullValue
-            }.run {
+            item.airline?.name?.let {
                 itemView.itemTextAirport.text = item?.airline?.name
+            }?:run {
+                itemView.itemTextAirport.text = Constant.nullValue
             }
 
-            item.departure?.icao.let {
-                itemView.itemTextIcao.text = Constant.nullValue
-            }.run{
+            item.departure?.icao?.let {
                 itemView.itemTextIcao.text = "${item?.departure?.icao.toString()} - $departTime "
+            }?:run{
+                itemView.itemTextIcao.text = Constant.nullValue
             }
 
-            item.arrival?.icao.let {
-                itemView.itemTextEstimated.text = Constant.nullValue
-            }.run {
+            item.arrival?.icao?.let {
                 itemView.itemTextEstimated.text = "${item?.arrival?.icao.toString()} - $arrivalTime"
+            }?:run {
+                itemView.itemTextEstimated.text = Constant.nullValue
             }
 
-            item.arrival?.delay.let {
-                itemView.itemDelay.text = Constant.nullValue
-            }.run {
+            item.arrival?.delay?.let {
                 itemView.itemDelay.text = item.departure?.delay.toString() + "min"
+            }?:run {
+                itemView.itemDelay.text = Constant.nullValue
             }
 
             when(item.flightStatus){
